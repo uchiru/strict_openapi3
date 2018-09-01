@@ -184,6 +184,46 @@ paths:
                   - string
                   - 'null'
                   pattern: "[a-zA-Z]*"
+- orig: "/pets2/{id}"
+  query:
+  - kind: const
+    value: pets2
+  - kind: variable
+    name: id
+  path:
+    get:
+      parameters:
+      - name: id
+        description: Pet id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              type: object
+              required:
+              - pet
+              additionalProperties: false
+              properties:
+                pet:
+                  type: object
+                  required:
+                  - id
+                  - name
+                  additionalProperties: false
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    tag:
+                      type:
+                      - string
+                      - 'null'
+                      pattern: "[a-zA-Z]*"
 - orig: "/stats"
   query:
   - kind: const

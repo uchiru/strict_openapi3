@@ -138,7 +138,7 @@ module StrictOpenapi3
         out["properties"] = value["properties"].map do |prop, prop_spec|
           [prop, parse_schema("#{prefix}:#{prop}", prop_spec, components)]
         end.to_h
-        if value.delete("nullable")
+        if value["nullable"]
           {"oneOf" => [out, {"type" => "null"}]}
         else
           out
@@ -158,15 +158,19 @@ module StrictOpenapi3
             raise ParseError.new(%(Broken schema: "#{prefix}:enum" should be array of strings")) 
           end
         end
-        if value.delete("nullable")
-          value.merge("type" => [value["type"], "null"])
+        if value["nullable"]
+          (value.keys - ["nullable"]).map { |k| 
+            [k, value[k]]
+          }.to_h.merge("type" => [value["type"], "null"])
         else
           value
         end
       elsif value["type"] == "integer" || value["type"] == "boolean" || value["type"] == "float"
         assert_keys(prefix + "[#{value["type"]}]", value, ["type"], ["nullable"])
-        if value.delete("nullable")
-          value.merge("type" => [value["type"], "null"])
+        if value["nullable"]
+          (value.keys - ["nullable"]).map { |k| 
+            [k, value[k]]
+          }.to_h.merge("type" => [value["type"], "null"])
         else
           value
         end
