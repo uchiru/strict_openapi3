@@ -1,0 +1,153 @@
+openapi: "3.0.0"
+info: {title: "Test API Spec", version: "0.0.0"}
+tags:
+  - {name: test1, description: "test 1 desc"}
+  - {name: test2, description: "test 2 desc"}
+paths:
+  /stats:
+    get:
+      summary: Get stats in prometheus format
+      tags: [test1]
+      responses:
+        200:
+          description: stats
+          content:
+            text/plain:
+              example: |
+                namespaces 1
+                apps 1
+                jobs{status="waiting"} 0
+                jobs{status="running"} 0
+  /pets:
+    get:
+      summary: List all pets
+      description: Detail information about pets
+      tags: [test2]
+      parameters:
+        - name: extend
+          in: query
+          description: show extended information
+          required: true
+          schema: {type: boolean}
+        - name: page
+          in: query
+          description: page number
+          required: false
+          schema: {type: integer}
+      responses:
+        '200':
+          description: An array of pets
+          content:
+            application/json:    
+              schema:
+                type: object
+                required: [pets]
+                properties:
+                  pets:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Pet"
+    post:
+      summary: Create a pet
+      tags: [test1]
+      requestBody:
+        description: notice
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [pet]
+              properties:
+                pet:
+                  type: object
+                  required: [name]
+                  properties:
+                    name:       { type: string }
+                    tag:        { type: string }
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /pets/{id}:
+    get:
+      summary: Get the pet
+      tags: [test1]
+      parameters:
+        - name: id
+          description: Pet id
+          in: path
+          required: true
+          schema: {type: integer}
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/Pet"
+  /nullable:
+    get:
+      summary: Get nullable
+      tags: [test1]
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [obj]
+                properties:
+                  obj:
+                    type: object
+                    nullable: true
+                    required: [some]
+                    properties:
+                      some: {type: string}
+  /one_of:
+    get:
+      summary: Allow one_of
+      tags: [test1]
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [image]
+                properties:
+                  image:
+                    oneOf:
+                    - type: object
+                      required: [image_type, image_name]
+                      properties:
+                        image_type: {type: string, enum: ["image"]}
+                        image_name: {type: string}
+                    - type: object
+                      required: [image_type, image_repo]
+                      properties:
+                        image_type:       {type: string, enum: ["repo"]}
+                        image_repo:       { type: string }
+components:
+  schemas:
+    Pet:
+      type: object
+      required: [id, name]
+      properties:
+        id: {type: integer}
+        name: {type: string}
+        tag: {type: string, nullable: true, format: "[a-zA-Z]*"}
+    Error: &Error
+      type: object
+      required: [errors]
+      properties:
+        errors:
+          type: array
+          items: {type: string}

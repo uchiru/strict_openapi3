@@ -1,0 +1,196 @@
+---
+paths:
+- orig: "/nullable"
+  query:
+  - kind: const
+    value: nullable
+  path:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              type: object
+              required:
+              - obj
+              additionalProperties: false
+              properties:
+                obj:
+                  oneOf:
+                  - type: object
+                    required:
+                    - some
+                    additionalProperties: false
+                    properties:
+                      some:
+                        type: string
+                  - type: 'null'
+- orig: "/one_of"
+  query:
+  - kind: const
+    value: one_of
+  path:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              type: object
+              required:
+              - image
+              additionalProperties: false
+              properties:
+                image:
+                  oneOf:
+                  - type: object
+                    required:
+                    - image_type
+                    - image_name
+                    additionalProperties: false
+                    properties:
+                      image_type:
+                        type: string
+                        enum:
+                        - image
+                      image_name:
+                        type: string
+                  - type: object
+                    required:
+                    - image_type
+                    - image_repo
+                    additionalProperties: false
+                    properties:
+                      image_type:
+                        type: string
+                        enum:
+                        - repo
+                      image_repo:
+                        type: string
+- orig: "/pets"
+  query:
+  - kind: const
+    value: pets
+  path:
+    get:
+      parameters:
+      - name: extend
+        in: query
+        description: show extended information
+        required: true
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        description: page number
+        required: false
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              type: object
+              required:
+              - pets
+              additionalProperties: false
+              properties:
+                pets:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                    - id
+                    - name
+                    additionalProperties: false
+                    properties:
+                      id:
+                        type: integer
+                      name:
+                        type: string
+                      tag:
+                        type:
+                        - string
+                        - 'null'
+                        format: "[a-zA-Z]*"
+    post:
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            type: object
+            required:
+            - pet
+            additionalProperties: false
+            properties:
+              pet:
+                type: object
+                required:
+                - name
+                additionalProperties: false
+                properties:
+                  name:
+                    type: string
+                  tag:
+                    type: string
+      responses:
+        '201': {}
+        default:
+          content:
+            application/json:
+              type: object
+              required:
+              - errors
+              additionalProperties: false
+              properties:
+                errors:
+                  type: array
+                  items:
+                    type: string
+- orig: "/pets/{id}"
+  query:
+  - kind: const
+    value: pets
+  - kind: variable
+    name: id
+  path:
+    get:
+      parameters:
+      - name: id
+        description: Pet id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              type: object
+              required:
+              - id
+              - name
+              additionalProperties: false
+              properties:
+                id:
+                  type: integer
+                name:
+                  type: string
+                tag:
+                  type:
+                  - string
+                  - 'null'
+                  format: "[a-zA-Z]*"
+- orig: "/stats"
+  query:
+  - kind: const
+    value: stats
+  path:
+    get:
+      parameters: []
+      responses:
+        '200':
+          content:
+            text/plain: {}

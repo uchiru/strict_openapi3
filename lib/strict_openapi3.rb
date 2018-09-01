@@ -1,5 +1,7 @@
+require "yaml"
+require "json"
+require "json-schema"
 require "strict_openapi3/version"
-
-module StrictOpenapi3
-  # Your code goes here...
-end
+require "strict_openapi3/errors"
+require "strict_openapi3/parser"
+require "strict_openapi3/validator"

@@ -1,0 +1,17 @@
+openapi: "3.0.0"
+# missed info params
+info: {}
+paths:
+  /stats:
+    get:
+      description: Get stats in prometheus format
+      responses:
+        200:
+          description: stats
+          content:
+            text/plain:
+              example: |
+                namespaces 1
+                apps 1
+                jobs{status="waiting"} 0
+                jobs{status="running"} 0
