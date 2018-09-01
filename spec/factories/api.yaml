@@ -91,6 +91,23 @@ paths:
             application/json:    
               schema:
                 $ref: "#/components/schemas/Pet"
+  /pets2/{id}:
+    get:
+      summary: Get the pet
+      tags: [test1]
+      parameters:
+        - name: id
+          description: Pet id
+          in: path
+          required: true
+          schema: {type: integer}
+      responses:
+        '200':
+          description: success
+          content:
+            application/json:    
+              schema:
+                $ref: "#/components/schemas/PetJson"
   /nullable:
     get:
       summary: Get nullable
@@ -137,13 +154,18 @@ paths:
                         image_repo:       { type: string }
 components:
   schemas:
-    Pet:
+    Pet: &Pet
       type: object
       required: [id, name]
       properties:
         id: {type: integer}
         name: {type: string}
         tag: {type: string, nullable: true, pattern: "[a-zA-Z]*"}
+    PetJson:
+      type: object
+      required: [pet]
+      properties:
+        pet: *Pet
     Error: &Error
       type: object
       required: [errors]
