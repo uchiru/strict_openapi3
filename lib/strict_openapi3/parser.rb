@@ -97,7 +97,7 @@ module StrictOpenapi3
       unless value.is_a?(Hash)
         raise ParseError.new(%(Broken schema: "#{prefix}" should be hash)) 
       end
-      assert_keys(prefix, value, [], ["type", "items", "required", "properties", "enum", "additionalProperties", "nullable", "format", "minLength", "$ref", "oneOf"])
+      assert_keys(prefix, value, [], ["type", "items", "required", "properties", "enum", "additionalProperties", "nullable", "pattern", "minLength", "$ref", "oneOf"])
       if !value.key?("type") && value.key?("$ref")
         assert_keys(prefix + "[no type]", value, [], ["$ref"])
         unless value["$ref"].index("#/components/schemas/") == 0
@@ -150,7 +150,7 @@ module StrictOpenapi3
           "items" => parse_schema("#{prefix}:items", value["items"], components)
         }
       elsif value["type"] == "string"
-        assert_keys(prefix + "[#{value["type"]}]", value, ["type"], ["nullable", "format", "enum", "minLength"])
+        assert_keys(prefix + "[#{value["type"]}]", value, ["type"], ["nullable", "pattern", "enum", "minLength"])
         if value.key?("enum")
           if value["enum"].is_a?(Array) && value["enum"].all? { |i| i.is_a?(String) }
             # its ok

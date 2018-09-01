@@ -122,6 +122,12 @@ describe StrictOpenapi3::Validator do
         expect(validator.validate_request("POST", "/pets", {}, "application/json", '{"pet":{"name":"bob"}}'))
       end.to_not raise_error
     end
+
+    it 'failes broken pet name' do
+      expect do
+        expect(validator.validate_request("POST", "/pets", {}, "application/json", '{"pet":{"name":"0bob"}}'))
+      end.to raise_error(%(request failed: The property '#/pet/name' value "0bob" did not match the regex '^[a-z][a-z0-9\\-_]+$'))
+    end
   end
 
   describe 'response' do

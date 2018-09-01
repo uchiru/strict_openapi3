@@ -113,7 +113,7 @@ paths:
                         type:
                         - string
                         - 'null'
-                        format: "[a-zA-Z]*"
+                        pattern: "[a-zA-Z]*"
     post:
       parameters: []
       requestBody:
@@ -133,6 +133,7 @@ paths:
                 properties:
                   name:
                     type: string
+                    pattern: "^[a-z][a-z0-9\\-_]+$"
                   tag:
                     type: string
       responses:
@@ -182,7 +183,7 @@ paths:
                   type:
                   - string
                   - 'null'
-                  format: "[a-zA-Z]*"
+                  pattern: "[a-zA-Z]*"
 - orig: "/stats"
   query:
   - kind: const
