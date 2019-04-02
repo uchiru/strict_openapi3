@@ -166,7 +166,7 @@ module StrictOpenapi3
           value
         end
       elsif value["type"] == "integer" || value["type"] == "boolean" || value["type"] == "float"
-        assert_keys(prefix + "[#{value["type"]}]", value, ["type"], ["nullable"])
+        assert_keys(prefix + "[#{value["type"]}]", value, ["type"], ["nullable", "enum"])
         if value["nullable"]
           (value.keys - ["nullable"]).map { |k| 
             [k, value[k]]
