@@ -210,7 +210,7 @@ module StrictOpenapi3
           out["requestBody"] = parseRequestBody("#{prefix}:#{name}:requestBody", method["requestBody"], components)
         end
         out["responses"] = method["responses"].map { |code, response|
-          assert_one_of("#{prefix}:#{name}:responses:#{code}", code.to_s, ["200", "201", "404", "409", "422", "default"])
+          assert_one_of("#{prefix}:#{name}:responses:#{code}", code.to_s, ["200", "201", "301", "302", "404", "409", "422", "default"])
           [code.to_s, parse_response("#{prefix}:#{name}:responses:#{code}", response, components)]
         }.to_h
         [name, out]
